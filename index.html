@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tangkap Bentuk</title>
-<link rel="preload" as="image" href="Whimsical_Shape_Catcher_Meadow.png">
 <style>
 :root{
   --ink:#3b2412;
@@ -20,9 +19,9 @@ html,body{
   margin:0;height:100%;overflow:hidden;
   background:#aed6ee;
   font-family:var(--font);color:var(--ink);
-  touch-action:none;user-select:none;-webkit-user-select:none;
+  touch-action:manipulation;user-select:none;-webkit-user-select:none;
 }
-#game{position:fixed;inset:0;width:100%;height:100%;display:block}
+#game{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
 
 /* ---------- HUD ---------- */
 #hud{
@@ -110,60 +109,23 @@ body.calibrating #camHint{font-size:15px;padding:6px}
 .btn:disabled{opacity:.45;cursor:default}
 .status{margin:0 0 10px;font-size:15px;font-weight:700;min-height:1.3em}
 .status:empty{display:none}
-/* ---------- Menu utama ---------- */
-#overlay.scene{
-  background-color:#8fc8f2;
-  background-image:linear-gradient(to top,rgba(43,26,10,.4),rgba(43,26,10,0) 50%),url("Whimsical_Shape_Catcher_Meadow.png");
-  background-size:cover;background-position:center 30%;background-repeat:no-repeat;
-  backdrop-filter:none;-webkit-backdrop-filter:none;
+.menu-actions{flex-direction:column;align-items:stretch;margin:22px auto 16px;max-width:300px}
+.menu-actions .btn{font-size:24px;padding:16px 22px}
+/* semua menu: tombol tersusun atas-bawah */
+#p-pause .actions,#p-over .actions,#p-exit .actions,#p-settings .actions{
+  flex-direction:column;align-items:stretch;max-width:300px;margin-left:auto;margin-right:auto;
 }
-#overlay.dock{align-items:flex-end;padding-bottom:calc(env(safe-area-inset-bottom,0px) + clamp(18px,6vh,64px))}
-#p-menu{background:none;border:0;box-shadow:none;padding:0;width:min(96vw,1200px)}
-#p-menu .title{
-  margin:0 0 clamp(14px,3vh,30px);font-size:clamp(40px,min(10.5vw,15vh),128px);line-height:.95;letter-spacing:.01em;
-  color:#fff6d6;-webkit-text-stroke:.12em #5b3418;paint-order:stroke fill;
-  text-shadow:0 .07em 0 #3b2412,0 .14em .2em rgba(30,15,5,.4);
-  transform:rotate(-2deg);animation:titleIn .8s cubic-bezier(.3,1.4,.5,1) both;
-}
-@keyframes titleIn{from{opacity:0;transform:translateY(-26px) rotate(-2deg) scale(.9)}to{opacity:1;transform:rotate(-2deg)}}
-@media (max-aspect-ratio:4/5){
-  #p-menu .title{font-size:clamp(48px,min(19vw,12vh),120px)}
-  #p-menu .title span{display:block}
-}
-.stack{display:grid;justify-items:center}
-.view{grid-area:1/1;display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:14px 18px}
-.view.off{visibility:hidden;pointer-events:none}
-#menuMode{flex-direction:column;align-items:center}
-.mode-row{display:flex;justify-content:center;gap:14px 18px}
-.btn.big{
-  font-size:clamp(22px,3vw,30px);padding:.6em 1em;min-width:min(42vw,220px);border-radius:20px;
-  box-shadow:0 6px 0 var(--coral-deep),inset 0 3px 0 rgba(255,255,255,.3);
-}
-.btn.alt.big{box-shadow:0 6px 0 #2f1d0e,inset 0 3px 0 rgba(255,255,255,.2)}
-.btn.big:active{box-shadow:0 2px 0 rgba(0,0,0,.3)}
-.mode{
-  font:inherit;font-weight:900;font-size:clamp(18px,2.4vw,24px);line-height:1.15;color:var(--ink);cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;gap:10px;
-  width:clamp(150px,40vw,240px);padding:18px 14px 16px;
-  background:#fbf0d4;border:4px solid #8a5a3a;border-radius:24px;box-shadow:0 7px 0 rgba(59,36,18,.55);
-}
-.mode .ico{
-  width:64px;height:64px;border-radius:50%;background:var(--coral);color:#fff;display:grid;place-items:center;
-  box-shadow:inset 0 3px 0 rgba(255,255,255,.3),0 3px 0 var(--coral-deep);
-}
-.mode:hover{transform:translateY(-3px)}
-.mode:active{transform:translateY(4px);box-shadow:0 3px 0 rgba(59,36,18,.55)}
-.mode:disabled{opacity:.5;cursor:default;transform:none}
-.mode:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
-.scene .status:not(:empty){
-  display:inline-block;margin:16px 0 0;padding:5px 16px;
-  background:rgba(251,240,212,.94);border:2px solid #8a5a3a;border-radius:999px;
-}
-@media (max-height:480px){
-  .mode{flex-direction:row;width:auto;padding:10px 16px;font-size:18px}
-  .mode .ico{width:44px;height:44px}
-  .mode .ico svg{width:26px;height:26px}
-}
+#p-pause .btn,#p-over .btn,#p-exit .btn,#p-settings .btn{font-size:22px;padding:14px 22px}
+/* pengaturan suara */
+.setting{margin:0 0 18px;text-align:left}
+.setting label{display:flex;justify-content:space-between;align-items:baseline;font-weight:800;font-size:20px;margin-bottom:6px}
+.setting output{font-size:20px;color:var(--coral-deep)}
+.setting input[type=range]{width:100%;height:34px;margin:0;accent-color:var(--coral);cursor:pointer;touch-action:pan-x}
+.setting small{display:block;font-size:13px;opacity:.7;margin-top:2px}
+.tips{margin:0;padding:0;list-style:none;font-size:15px;line-height:1.55;text-align:left;
+  background:#f0e0b8;border-radius:16px;padding:12px 16px}
+.tips li+li{margin-top:2px}
+.privacy{margin:12px 0 0;font-size:13px;opacity:.75}
 #p-calib{background:rgba(251,240,212,.97)}
 #calibMsg{margin:0;font-size:clamp(18px,3.4vw,24px);font-weight:800;line-height:1.3}
 #calibNum{font-size:clamp(56px,12vw,92px);font-weight:900;color:var(--coral);line-height:1;min-height:1em;margin-top:6px}
@@ -229,30 +191,22 @@ body.calibrating #camHint{font-size:15px;padding:6px}
 <div id="fps" hidden></div>
 <div id="toast" role="status"></div>
 
-<div id="overlay" class="scene dock">
+<div id="overlay">
   <section class="panel" id="p-menu">
-    <h1 class="title"><span>Tangkap</span> <span>Bentuk</span></h1>
-    <div class="stack">
-      <div class="view" id="menuMain">
-        <button class="btn big" id="btnStart" type="button" disabled>Bermain</button>
-        <button class="btn alt big" id="btnExit" type="button">Keluar</button>
-      </div>
-      <div class="view off" id="menuMode" inert>
-        <div class="mode-row">
-          <button class="mode" id="btnCam" type="button">
-            <span class="ico"><svg viewBox="0 0 48 48" width="38" height="38" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M6 17a3 3 0 0 1 3-3h6l3-4h12l3 4h6a3 3 0 0 1 3 3v19a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/><circle cx="24" cy="26" r="8"/></svg></span>
-            Mode Kamera
-          </button>
-          <button class="mode" id="btnKeys" type="button">
-            <span class="ico"><svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3.5"><circle cx="13" cy="24" r="10"/><circle cx="35" cy="24" r="10"/></g><g fill="currentColor" font-family="inherit" font-size="15" font-weight="900" text-anchor="middle"><text x="13" y="29.5">1</text><text x="35" y="29.5">2</text></g></svg></span>
-            Mode Tekan Tombol
-          </button>
-        </div>
-        <button class="btn alt" id="btnModeBack" type="button">Kembali</button>
-      </div>
+    <h1>Tangkap Bentuk</h1>
+    <div class="actions menu-actions">
+      <button class="btn" id="btnStart" type="button" disabled>Start</button>
+      <button class="btn alt" id="btnSettings" type="button">Pengaturan</button>
+      <button class="btn alt" id="btnExit" type="button">Exit</button>
     </div>
     <p class="status" id="loadStatus">Memuat gambar…</p>
-    <p class="status" id="modeStatus"></p>
+    <ul class="tips">
+      <li>Kamera dipakai untuk membaca gerak badanmu.</li>
+      <li>Saat diminta, keluar dari bingkai kamera selama 5 detik.</li>
+      <li>Lalu masuk ke bingkai dan berdiri di tengah selama 5 detik.</li>
+      <li>Geser badan sekali ke kiri atau kanan untuk pindah jalur.</li>
+    </ul>
+    <p class="privacy">Video kamera hanya diproses di perangkatmu dan tidak dikirim ke mana pun.</p>
   </section>
 
   <section class="panel" id="p-calib" hidden>
@@ -264,7 +218,25 @@ body.calibrating #camHint{font-size:15px;padding:6px}
     <h2>Jeda</h2>
     <div class="actions">
       <button class="btn" id="btnResume" type="button">Lanjut</button>
+      <button class="btn alt" id="btnSettings2" type="button">Pengaturan</button>
       <button class="btn alt" id="btnMenu1" type="button">Ke menu</button>
+    </div>
+  </section>
+
+  <section class="panel" id="p-settings" hidden>
+    <h2>Pengaturan</h2>
+    <p class="lead">Atur volume suara.</p>
+    <div class="setting">
+      <label for="volBgm"><span>Musik latar</span><output id="volBgmVal" for="volBgm">70%</output></label>
+      <input type="range" id="volBgm" min="0" max="100" step="5" value="70">
+    </div>
+    <div class="setting">
+      <label for="volSfx"><span>Efek suara</span><output id="volSfxVal" for="volSfx">80%</output></label>
+      <input type="range" id="volSfx" min="0" max="100" step="5" value="80">
+      <small>Suara perintah "Tangkap bentuk…" selalu lebih keras dari musik.</small>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnSetBack" type="button">Selesai</button>
     </div>
   </section>
 
@@ -332,7 +304,6 @@ let items = [], fx = [], particles = [], popups = [];
 let score = 0, lives = START_LIVES, level = 1, correctTotal = 0, correctInTarget = 0, streak = 0;
 let target = null, targetClock = 0, spawnTimer = 1, shake = 0, flash = 0, best = 0;
 let muted = false, previewOn = true;
-let mode = 'camera';             // 'camera' = Mode Kamera, 'button' = Mode Tekan Tombol
 let lastKey = 0;
 const clouds = Array.from({ length: 5 }, (_, i) => ({ x: Math.random(), y: 0.06 + Math.random() * 0.3, s: rand(0.7, 1.3), v: rand(0.004, 0.012) }));
 
@@ -426,13 +397,64 @@ addEventListener('resize', resize);
 /* ---------------------------------------------------------------------
    Suara: efek lewat WebAudio, perintah lewat speechSynthesis (bahasa Indonesia)
    --------------------------------------------------------------------- */
-let actx = null;
+const AUDIO_DIR = 'assets/audio';
+const BGM_MAX = 0.5;     // volume musik saat slider 100% (suara perintah selalu 1.0, jadi lebih keras)
+const DUCK = 0.22;       // musik diturunkan ke sekian kali saat perintah suara diucapkan
+
+const settings = { bgm: 0.7, sfx: 0.8 };
+try {
+  const s = JSON.parse(localStorage.getItem('tangkapBentuk.settings') || '{}');
+  if (typeof s.bgm === 'number') settings.bgm = clamp(s.bgm, 0, 1);
+  if (typeof s.sfx === 'number') settings.sfx = clamp(s.sfx, 0, 1);
+} catch (e) {}
+function saveSettings() { try { localStorage.setItem('tangkapBentuk.settings', JSON.stringify(settings)); } catch (e) {} }
+
+function makeTrack(file) {
+  const el = new Audio(`${AUDIO_DIR}/${file}`);
+  el.loop = true; el.preload = 'auto';
+  return { el, gain: null };
+}
+const music = { menu: makeTrack('mainmenu.mp3'), game: makeTrack('game.mp3') };
+let duck = 1, duckTarget = 1, audioUnlocked = false;
+
+let actx = null, sfxGain = null;
 function initAudio() {
   try {
-    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!actx) {
+      actx = new (window.AudioContext || window.webkitAudioContext)();
+      sfxGain = actx.createGain(); sfxGain.gain.value = settings.sfx; sfxGain.connect(actx.destination);
+      // lewat WebAudio supaya volume musik juga jalan di iOS (hanya jika halaman dibuka lewat http/https)
+      if (/^https?:$/.test(location.protocol)) {
+        for (const t of Object.values(music)) {
+          try { t.gain = actx.createGain(); actx.createMediaElementSource(t.el).connect(t.gain); t.gain.connect(actx.destination); }
+          catch (e) { t.gain = null; }
+        }
+      }
+    }
     if (actx.state === 'suspended') actx.resume();
   } catch (e) {}
+  applyVolumes();
 }
+function applyVolumes() {
+  if (sfxGain) sfxGain.gain.value = settings.sfx;
+  const v = muted ? 0 : settings.bgm * BGM_MAX * duck;
+  for (const t of Object.values(music)) {
+    if (t.gain) { t.el.volume = 1; t.gain.gain.value = v; } else t.el.volume = clamp(v, 0, 1);
+  }
+}
+// musik menu: di menu / selesai. musik game: kalibrasi, main, jeda (jeda = dihentikan sementara)
+function syncMusic() {
+  if (!audioUnlocked) return;
+  const want = (state === 'calibrate' || state === 'playing' || state === 'paused') ? 'game' : 'menu';
+  for (const k of Object.keys(music)) {
+    const el = music[k].el;
+    if (k === want && state !== 'paused' && !document.hidden) { if (el.paused) el.play().catch(() => {}); }
+    else { if (!el.paused) el.pause(); if (k !== want) { try { el.currentTime = 0; } catch (e) {} } }
+  }
+}
+function unlockAudio() { audioUnlocked = true; initAudio(); syncMusic(); }
+['pointerdown', 'pointerup', 'click', 'keydown', 'touchend'].forEach(ev => addEventListener(ev, unlockAudio, { passive: true }));
+document.addEventListener('visibilitychange', syncMusic);
 function tone(freq, dur, type = 'sine', vol = 0.16, delay = 0, endFreq = null) {
   if (muted || !actx) return;
   const t0 = actx.currentTime + delay;
@@ -442,7 +464,7 @@ function tone(freq, dur, type = 'sine', vol = 0.16, delay = 0, endFreq = null) {
   if (endFreq) o.frequency.exponentialRampToValueAtTime(endFreq, t0 + dur);
   g.gain.setValueAtTime(vol, t0);
   g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
-  o.connect(g); g.connect(actx.destination);
+  o.connect(g); g.connect(sfxGain || actx.destination);
   o.start(t0); o.stop(t0 + dur + 0.02);
 }
 const sfx = {
@@ -451,18 +473,31 @@ const sfx = {
   level: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.16, 'triangle', 0.16, i * 0.09)),
   over:  () => [392, 330, 262].forEach((f, i) => tone(f, 0.3, 'triangle', 0.16, i * 0.22)),
 };
+// suara wanita: pilih suara bahasa Indonesia yang terdengar perempuan (Google Bahasa Indonesia, Gadis, Damayanti, dst.)
+function pickVoice() {
+  const vs = speechSynthesis.getVoices().filter(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith('id'));
+  if (!vs.length) return null;
+  const female = /gadis|damayanti|female|wanita|perempuan|google/i, male = /andika|(^|\W)male|pria|laki/i;
+  return vs.find(v => female.test(v.name)) || vs.find(v => !male.test(v.name)) || vs[0];
+}
+let speechId = 0, speechTimer = 0;
 function say(text) {
   if (muted || !('speechSynthesis' in window)) return;
   try {
     speechSynthesis.cancel();
+    const id = ++speechId;
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'id-ID'; u.rate = 0.95; u.pitch = 1.1;
-    const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith('id'));
-    if (v) u.voice = v;
+    u.lang = 'id-ID'; u.rate = 0.95; u.pitch = 1.2; u.volume = 1;   // volume suara perintah selalu maksimum
+    const v = pickVoice(); if (v) u.voice = v;
+    const done = () => { if (id === speechId) duckTarget = 1; };
+    u.onstart = () => { if (id === speechId) duckTarget = DUCK; };
+    u.onend = u.onerror = done;
+    duckTarget = DUCK;                                  // musik mengecil selagi suara berbicara
+    clearTimeout(speechTimer); speechTimer = setTimeout(done, 5000);   // jaga-jaga kalau onend tidak terpanggil
     speechSynthesis.speak(u);
-  } catch (e) {}
+  } catch (e) { duckTarget = 1; }
 }
-function stopSpeech() { try { speechSynthesis.cancel(); } catch (e) {} }
+function stopSpeech() { speechId++; duckTarget = 1; try { speechSynthesis.cancel(); } catch (e) {} }
 
 /* ---------------------------------------------------------------------
    Kamera: pelacakan posisi pemain (kiri-kanan) dengan pengurangan latar belakang
@@ -592,28 +627,21 @@ function finalizeBackground() {
    Alur: menu -> (kalibrasi kamera) -> hitung mundur -> main -> selesai
    --------------------------------------------------------------------- */
 const overlay = $('overlay');
-const calib = { phase: null, t: 0, resume: false, note: '' };
+const calib = { phase: null, t: 0, resume: false };
 
 function showPanel(id) {
   overlay.hidden = !id;
   document.querySelectorAll('.panel').forEach(p => { p.hidden = p.id !== 'p-' + id; });
   overlay.classList.toggle('top', id === 'calib');
-  overlay.classList.toggle('scene', id === 'menu' || id === 'exit');
-  overlay.classList.toggle('dock', id === 'menu');
-  if (id === 'menu') { menuView('main'); $('modeStatus').textContent = ''; }
   if (id) { const b = $('p-' + id).querySelector('button'); if (b) b.focus({ preventScroll: true }); }
-}
-function menuView(v) {
-  const m = v === 'mode';
-  $('menuMain').classList.toggle('off', m); $('menuMain').inert = m;
-  $('menuMode').classList.toggle('off', !m); $('menuMode').inert = !m;
 }
 function setState(s) {
   state = s;
   document.body.classList.toggle('calibrating', s === 'calibrate' && camera.active);
   $('hud').hidden = !(s === 'playing' || s === 'paused' || s === 'calibrate');
-  $('padL').hidden = $('padR').hidden = !(s === 'playing' && mode === 'button');
+  $('padL').hidden = $('padR').hidden = s !== 'playing';
   refreshPreview();
+  syncMusic();
 }
 
 function resetGame() {
@@ -623,8 +651,8 @@ function resetGame() {
   updateHud();
 }
 
-function beginFlow(full, resume, note = '') {
-  calib.resume = resume; calib.t = 0; calib.note = note;
+function beginFlow(full, resume) {
+  calib.resume = resume; calib.t = 0;
   const doCalib = full && camera.active;
   calib.phase = doCalib ? 'empty' : 'enter';
   if (doCalib) { camera.calibrated = false; camera.acc.fill(0); camera.accN = 0; camera.seen = false; }
@@ -648,7 +676,7 @@ function updateCalib(dt) {
       if (calib.t >= 5) { startPlaying(); return; }
       break;
     case 'enter':
-      msg = (calib.note ? calib.note + ' ' : '') + 'Bersiap!';
+      msg = 'Bersiap!';
       num = Math.max(1, Math.ceil(3 - calib.t));
       if (calib.t >= 3) { startPlaying(); return; }
       break;
@@ -693,7 +721,7 @@ function nextTarget() {
   target = pool[Math.floor(Math.random() * pool.length)];
   correctInTarget = 0; targetClock = 0;
   $('targetName').textContent = target.label;
-  $('targetIcon').src = target.imgs[0].img.src;
+  $('targetIcon').src = target.imgs[Math.floor(Math.random() * target.imgs.length)].img.src;
   const t = $('target');
   t.classList.remove('changed'); void t.offsetWidth; t.classList.add('changed');
   say('Tangkap bentuk ' + target.label);
@@ -712,25 +740,46 @@ function toast(text) {
 /* ---------------------------------------------------------------------
    Logika permainan
    --------------------------------------------------------------------- */
+// Pengacakan: bentuk tidak boleh muncul 3x berturut-turut, gambar diambil dari "kantong kocok"
+// (semua gambar satu bentuk keluar dulu sebelum ada yang berulang), jalur dan arah hadap diacak.
+const lastShapes = [];
+let lastLane = -1;
 function pickShape() {
-  if (target && Math.random() < TARGET_BIAS) return target;
-  return shapes[Math.floor(Math.random() * shapes.length)];
+  let s;
+  for (let i = 0; i < 8; i++) {
+    s = (target && Math.random() < TARGET_BIAS) ? target : shapes[Math.floor(Math.random() * shapes.length)];
+    if (!(lastShapes.length >= 2 && lastShapes[0] === s && lastShapes[1] === s)) break;
+  }
+  lastShapes.unshift(s); lastShapes.length = Math.min(lastShapes.length, 2);
+  return s;
+}
+function nextVariant(s) {
+  if (!s.bag || !s.bag.length) {
+    const b = s.imgs.map((_, i) => i);
+    for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; }
+    if (b.length > 1 && b[b.length - 1] === s.lastVar) [b[0], b[b.length - 1]] = [b[b.length - 1], b[0]];
+    s.bag = b;
+  }
+  s.lastVar = s.bag.pop();
+  return s.imgs[s.lastVar];
 }
 function spawn() {
   if (items.length >= 9) return;
-  const free = [];
+  let free = [];
   for (let l = 0; l < LANES; l++) if (!items.some(it => it.lane === l && it.y < itemBase * 2.2)) free.push(l);
   if (!free.length) return;
+  if (free.length > 1) free = free.filter(l => l !== lastLane);      // jangan jalur yang sama dua kali berturut-turut
   const lane = free[Math.floor(Math.random() * free.length)];
+  lastLane = lane;
   const s = pickShape();
-  const v = s.imgs[Math.floor(Math.random() * s.imgs.length)];
+  const v = nextVariant(s);
   const size = itemBase * rand(0.92, 1.12);
   const k = size / Math.max(v.img.naturalWidth, v.img.naturalHeight);
   const w = v.img.naturalWidth * k, h = v.img.naturalHeight * k;
   const speedMul = Math.min(2.1, 1 + 0.1 * (level - 1));
   items.push({
     shape: s, img: v.img, deco: v.deco, box: v.box, w, h,
-    lane, x: laneCx(lane), y: -h / 2,
+    flip: Math.random() < 0.5, lane, x: laneCx(lane), y: -h / 2,
     vy: H * 0.27 * speedMul * rand(0.85, 1.2), pb: -9999
   });
 }
@@ -744,7 +793,7 @@ function burst(x, y, color, n) {
 function popup(x, y, text, color) { popups.push({ x, y, text, color, t: 0 }); }
 
 function onCatch(it) {
-  fx.push({ img: it.img, deco: it.deco, w: it.w, h: it.h, x: it.x, y: it.y, t: 0 });
+  fx.push({ img: it.img, deco: it.deco, flip: it.flip, w: it.w, h: it.h, x: it.x, y: it.y, t: 0 });
   if (it.shape === target) {
     streak++; correctTotal++; correctInTarget++;
     const pts = 10 + 2 * Math.min(streak - 1, 5);
@@ -973,7 +1022,13 @@ function makeDeco(im) {                         // gambar bentuk + garis tepi co
   g.drawImage(im, p * S, p * S, nw * S, nh * S);
   return c;
 }
-function drawDeco(d, im, x, y, w, h) { const k = w / im.naturalWidth; ctx.drawImage(d, x - 5 * k, y - 5 * k, w + 10 * k, h + 10 * k); }
+function drawDeco(d, im, x, y, w, h, flip) {
+  const k = w / im.naturalWidth;
+  if (!flip) { ctx.drawImage(d, x - 5 * k, y - 5 * k, w + 10 * k, h + 10 * k); return; }
+  ctx.save(); ctx.translate(x + w / 2, 0); ctx.scale(-1, 1);           // cermin kiri-kanan
+  ctx.drawImage(d, -w / 2 - 5 * k, y - 5 * k, w + 10 * k, h + 10 * k);
+  ctx.restore();
+}
 
 function render(dt) {
   ctx.drawImage(bg, 0, 0, W, H);
@@ -1005,11 +1060,11 @@ function render(dt) {
   const bx = basket.x - (basket.w + 24) / 2, by = basket.top - (12 + basket.bh * .13);
   shadow(ctx, basket.x, H - groundH + basket.bh * .96, basket.w * .9);
   ctx.drawImage(basketBack, bx, by, basket.w + 24, basketBack.height / dpr);
-  for (const it of items) drawDeco(it.deco, it.img, it.x - it.w / 2, it.y - it.h / 2, it.w, it.h);
+  for (const it of items) drawDeco(it.deco, it.img, it.x - it.w / 2, it.y - it.h / 2, it.w, it.h, it.flip);
   for (const f of fx) {                                   // benda meluncur masuk ke keranjang
     const p = f.t, e = p * p, s = 1 - .6 * p;
     const x = f.x + (basket.x - f.x) * e, y = f.y + (basket.top + basket.bh * .3 - f.y) * e;
-    ctx.globalAlpha = 1 - .3 * p; drawDeco(f.deco, f.img, x - f.w * s / 2, y - f.h * s / 2, f.w * s, f.h * s);
+    ctx.globalAlpha = 1 - .3 * p; drawDeco(f.deco, f.img, x - f.w * s / 2, y - f.h * s / 2, f.w * s, f.h * s, f.flip);
   }
   ctx.globalAlpha = 1;
   ctx.drawImage(basketFront, bx, by, basket.w + 24, basketFront.height / dpr);
@@ -1045,6 +1100,7 @@ function frame(now) {
   if (state === 'calibrate' || state === 'playing') updateBasket(dt);
   if (state === 'playing') update(dt);
   if (state !== 'paused') updateEffects(dt);
+  if (Math.abs(duck - duckTarget) > 0.002) { duck += (duckTarget - duck) * Math.min(1, dt * (duckTarget < duck ? 12 : 3)); applyVolumes(); }
   if (camera.active && (state === 'calibrate' || state === 'playing')) trackCamera(now);
   if (needBuild) { buildScene(); needBuild = false; }
   render(dt);
@@ -1061,15 +1117,14 @@ addEventListener('keydown', e => {
   switch (e.code) {
     case 'Digit1': case 'Numpad1':
       e.preventDefault();
-      if (!e.repeat && mode === 'button' && (state === 'playing' || state === 'calibrate')) { setLane(basket.lane - 1); lastKey = performance.now(); }
+      if (!e.repeat && (state === 'playing' || state === 'calibrate')) { setLane(basket.lane - 1); lastKey = performance.now(); }
       break;
     case 'Digit2': case 'Numpad2':
       e.preventDefault();
-      if (!e.repeat && mode === 'button' && (state === 'playing' || state === 'calibrate')) { setLane(basket.lane + 1); lastKey = performance.now(); }
+      if (!e.repeat && (state === 'playing' || state === 'calibrate')) { setLane(basket.lane + 1); lastKey = performance.now(); }
       break;
     case 'KeyP': case 'Escape':
       if (state === 'playing') pauseGame(); else if (state === 'paused') resumeGame();
-      else if (state === 'menu' && e.code === 'Escape' && !$('menuMode').classList.contains('off')) menuView('main');
       break;
     case 'KeyM': toggleMute(); break;
     case 'KeyF': $('fps').hidden = !$('fps').hidden; break;
@@ -1103,35 +1158,48 @@ function toggleMute() {
   muted = !muted;
   $('muteBtn').textContent = muted ? '🔇' : '🔊';
   if (muted) stopSpeech();
+  applyVolumes();
 }
+
+/* ---- Pengaturan volume ---- */
+let settingsFrom = 'menu';
+function syncSliders() {
+  $('volBgm').value = Math.round(settings.bgm * 100); $('volBgmVal').textContent = Math.round(settings.bgm * 100) + '%';
+  $('volSfx').value = Math.round(settings.sfx * 100); $('volSfxVal').textContent = Math.round(settings.sfx * 100) + '%';
+}
+function openSettings(from) { settingsFrom = from; syncSliders(); showPanel('settings'); }
+$('btnSettings').addEventListener('click', () => openSettings('menu'));
+$('btnSettings2').addEventListener('click', () => openSettings('pause'));
+$('btnSetBack').addEventListener('click', () => showPanel(settingsFrom));
+$('volBgm').addEventListener('input', e => {
+  settings.bgm = clamp(e.target.value / 100, 0, 1); $('volBgmVal').textContent = e.target.value + '%';
+  initAudio(); saveSettings();
+});
+$('volSfx').addEventListener('input', e => {
+  settings.sfx = clamp(e.target.value / 100, 0, 1); $('volSfxVal').textContent = e.target.value + '%';
+  initAudio(); saveSettings();
+});
+$('volSfx').addEventListener('change', () => sfx.good());   // contoh bunyi efek
 $('muteBtn').addEventListener('click', toggleMute);
 $('target').addEventListener('click', () => { if (state === 'playing' && target) say('Tangkap bentuk ' + target.label); });
 
-$('btnStart').addEventListener('click', () => {
-  initAudio(); menuView('mode'); $('btnCam').focus({ preventScroll: true });
-});
-$('btnModeBack').addEventListener('click', () => {
-  menuView('main'); $('btnStart').focus({ preventScroll: true });
-});
-$('btnKeys').addEventListener('click', () => {
-  initAudio(); mode = 'button'; stopCamera();
-  resetGame(); beginFlow(false, false);
-});
-$('btnCam').addEventListener('click', async () => {
+$('btnStart').addEventListener('click', async () => {
   initAudio();
-  const st = $('modeStatus'), bc = $('btnCam'), bk = $('btnKeys');
-  bc.disabled = bk.disabled = true;
+  const st = $('loadStatus');
+  $('btnStart').disabled = true;
   st.textContent = 'Meminta izin kamera…';
   try {
     await startCamera();
-    mode = 'camera'; st.textContent = '';
+    st.textContent = '';
     resetGame(); beginFlow(true, false);
   } catch (err) {
     stopCamera();
-    mode = 'button'; st.textContent = '';
-    resetGame(); beginFlow(false, false, cameraErrorText(err) + ' Pindah ke Mode Tekan Tombol.');
+    const msg = cameraErrorText(err);
+    st.textContent = msg + ' Main dengan tombol 1 dan 2.';
+    resetGame(); beginFlow(false, false);
+    toast(msg);
   } finally {
-    bc.disabled = bk.disabled = false;
+    $('btnStart').disabled = false;
   }
 });
 $('btnExit').addEventListener('click', () => {
@@ -1153,7 +1221,8 @@ $('btnAgain').addEventListener('click', () => {
 resize();
 if ('speechSynthesis' in window) { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => {}; }
 requestAnimationFrame(frame);
-loadAssets().then(() => { state = 'menu'; showPanel('menu'); });
+applyVolumes();
+loadAssets().then(() => { state = 'menu'; showPanel('menu'); syncMusic(); });
 </script>
 </body>
 </html>
