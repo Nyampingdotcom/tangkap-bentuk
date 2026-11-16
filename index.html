@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tangkap Bentuk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#3b2412;
@@ -12,6 +15,7 @@
   --coral-deep:#7e1f1a;
   --leaf:#4f7a2c;
   --font:ui-rounded,"Nunito","Trebuchet MS","Segoe UI",system-ui,sans-serif;
+  --display:"Fredoka","Baloo 2","Arial Rounded MT Bold",ui-rounded,"Trebuchet MS",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -38,7 +42,7 @@ html,body{
 .pill b{font-size:22px;margin-left:4px}
 #lives{color:var(--coral);letter-spacing:3px;font-size:22px;padding:5px 16px}
 #hudRight{margin-left:auto;display:flex;align-items:center;gap:10px}
-#muteBtn{
+#muteBtn,#pauseBtn{
   pointer-events:auto;cursor:pointer;border:0;font-size:20px;line-height:1;
   width:42px;height:42px;border-radius:50%;background:rgba(251,240,212,.95);border:2px solid #8a5a3a;
   box-shadow:0 3px 0 #6b4328;
@@ -116,28 +120,9 @@ body.calibrating #camHint{font-size:15px;padding:6px}
   background:#7cc4ee url('Whimsical_Shape_Catcher_Meadow.png') center/cover no-repeat;
   backdrop-filter:none;-webkit-backdrop-filter:none;
 }
-#overlay.scene .panel{background:rgba(251,240,212,.92)}
 .panel{max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow-y:auto;touch-action:pan-y}
 #p-menu,#p-mode{width:min(94vw,640px)}
-#p-menu .menu-actions,#p-mode .menu-actions{max-width:none}
-#p-menu h1{white-space:nowrap}
-#p-menu h1{font-size:clamp(40px,9vw,68px);margin-bottom:4px;text-shadow:0 3px 0 rgba(255,255,255,.7)}
-/* tombol menu besar dengan ikon besar */
-.btn.big{display:flex;align-items:center;gap:16px;text-align:left;border-radius:24px;
-  font-size:clamp(26px,4.6vw,34px);padding:14px 24px 14px 16px}
-.btn.big .ic{flex:none;width:1.9em;height:1.9em;display:grid;place-items:center;font-size:1.25em;line-height:1;
-  background:rgba(255,255,255,.22);border-radius:50%}
-.btn.big .tx{flex:1}
-.btn.big small{display:block;font-size:.5em;font-weight:700;opacity:.9;margin-top:2px}
-.btn.big:disabled{opacity:.5}
-#p-mode h2{font-size:clamp(30px,6vw,44px)}
-#p-mode .btn.back{font-size:20px;padding:10px 22px}
-@media (max-height:560px){
-  .btn.big{font-size:24px;padding:8px 18px 8px 10px;gap:12px}
-  .menu-actions{margin:10px auto 8px;gap:8px}
-  #p-menu h1{font-size:40px}.panel{padding:16px 22px}
-  .tips{font-size:13px;padding:8px 12px}
-}
+
 /* semua menu: tombol tersusun atas-bawah */
 #p-pause .actions,#p-over .actions,#p-exit .actions,#p-settings .actions{
   flex-direction:column;align-items:stretch;max-width:300px;margin-left:auto;margin-right:auto;
@@ -188,6 +173,79 @@ body.calibrating #camHint{font-size:15px;padding:6px}
   #toast.show{opacity:1}
 }
 #fps{position:fixed;left:8px;bottom:6px;z-index:20;font:700 12px monospace;color:#fff;background:rgba(0,0,0,.55);padding:2px 6px;border-radius:6px;pointer-events:none}
+
+/* ---------- Tema: kaca bening, tombol pil, huruf bulat ---------- */
+.panel{
+  background:rgba(255,249,234,.88);border:2px solid rgba(255,255,255,.8);border-radius:34px;
+  box-shadow:0 24px 60px rgba(40,22,8,.35),inset 0 1px 0 rgba(255,255,255,.9);
+  backdrop-filter:blur(12px) saturate(1.1);-webkit-backdrop-filter:blur(12px) saturate(1.1);
+}
+.panel h2{font-family:var(--display);font-weight:600;font-size:clamp(28px,5.5vw,40px);color:#5a3216;letter-spacing:.01em}
+.lead{color:#6b4328}
+.btn{
+  font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:.03em;
+  border:0;border-radius:999px;padding:15px 30px;cursor:pointer;color:#fff;
+  background:linear-gradient(180deg,#e9594a,#c8372d);
+  box-shadow:0 8px 18px rgba(126,31,26,.30),inset 0 1px 0 rgba(255,255,255,.38);
+  transition:transform .15s ease,box-shadow .15s ease,filter .15s ease;
+}
+.btn.alt{
+  color:#5a3216;background:linear-gradient(180deg,#fffdf6,#f1e2c0);
+  border:2px solid rgba(138,90,58,.35);padding:13px 30px;
+  box-shadow:0 6px 14px rgba(59,36,18,.18),inset 0 1px 0 #fff;
+}
+@media (hover:hover){.btn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.05);box-shadow:0 12px 24px rgba(126,31,26,.34),inset 0 1px 0 rgba(255,255,255,.38)}
+  .btn.alt:hover:not(:disabled){box-shadow:0 10px 20px rgba(59,36,18,.22),inset 0 1px 0 #fff}}
+.btn:active:not(:disabled){transform:translateY(1px);filter:brightness(.97);box-shadow:0 3px 8px rgba(126,31,26,.3)}
+.btn.big{display:block;width:100%;text-align:center;font-size:clamp(24px,4.4vw,32px);padding:17px 30px}
+.btn.big.alt{padding:15px 30px}
+.btn.big small{display:block;font-family:var(--font);font-size:14px;font-weight:700;letter-spacing:0;opacity:.8;margin-top:3px}
+.btn.back{font-size:18px;padding:10px 26px}
+.menu-actions{gap:14px}
+#p-menu{padding-top:30px}
+#p-menu .menu-actions{max-width:380px;margin-top:26px}
+#p-mode .menu-actions{max-width:440px}
+.tips{background:rgba(240,224,184,.6);border-radius:18px}
+@media (max-height:560px){
+  .btn.big{font-size:22px;padding:11px 24px}.btn.big.alt{padding:9px 24px}
+  #p-menu{padding:18px 24px}#p-menu .menu-actions{margin:12px auto 6px;gap:9px}
+  .menu-actions{gap:9px}.tips{font-size:13px;padding:8px 12px}
+  .logo.sm .l1{font-size:34px}.logo.sm .l2{font-size:40px}
+}
+#muteBtn,#pauseBtn{display:grid;place-items:center;color:var(--ink)}
+#muteBtn svg,#pauseBtn svg{width:22px;height:22px}
+
+/* ---------- Judul bergaya logo ---------- */
+.logo{margin:0;font-family:var(--display);font-weight:700;line-height:.98;text-align:center;letter-spacing:.015em}
+.logo span{
+  display:block;-webkit-text-stroke:.16em #5a3216;paint-order:stroke fill;
+  text-shadow:0 .07em 0 #5a3216,0 .16em .22em rgba(40,22,8,.30);
+}
+.logo .l1{font-size:clamp(46px,10.5vw,96px);color:#ffd23f}
+.logo .l2{font-size:clamp(54px,12.5vw,116px);color:#ff7d45}
+.logo.sm .l1{font-size:clamp(38px,8vw,60px)}
+.logo.sm .l2{font-size:clamp(44px,9.5vw,72px)}
+
+/* ---------- Layar loading ---------- */
+#loading{
+  position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:calc(env(safe-area-inset-top,0px) + 3.5vh) 16px calc(env(safe-area-inset-bottom,0px) + 6vh);
+  background:#79c6f1 url('Chibi_Shape_Adventure_Meadow.jpg') center 35%/cover no-repeat;
+  transition:opacity .6s ease,visibility .6s;touch-action:manipulation;
+}
+#loading::after{content:"";position:absolute;inset:auto 0 0 0;height:34%;pointer-events:none;
+  background:linear-gradient(180deg,rgba(40,70,20,0),rgba(30,50,15,.45))}
+#loading.out{opacity:0;visibility:hidden}
+#loading>*{position:relative;z-index:1}
+.ld-bottom{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;min-height:92px;justify-content:flex-end}
+.ld-bar{width:min(82vw,440px);height:16px;border-radius:999px;background:rgba(255,255,255,.55);
+  border:2px solid rgba(255,255,255,.9);box-shadow:0 4px 14px rgba(30,50,15,.3);overflow:hidden}
+.ld-bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#ffd23f,#ff7d45);transition:width .35s ease}
+#ldText{margin:0;font-family:var(--display);font-weight:500;font-size:20px;color:#fff;letter-spacing:.04em;
+  text-shadow:0 2px 0 rgba(60,36,12,.55),0 3px 10px rgba(30,50,15,.5)}
+#ldGo{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@media (max-height:520px){#loading .logo .l1{font-size:34px}#loading .logo .l2{font-size:42px}}
 </style>
 </head>
 <body>
@@ -203,7 +261,8 @@ body.calibrating #camHint{font-size:15px;padding:6px}
   </button>
   <div id="hudRight">
     <div class="pill" id="lives" aria-label="Nyawa"></div>
-    <button id="muteBtn" type="button" aria-label="Suara hidup atau mati">🔊</button>
+    <button id="pauseBtn" class="hudBtn" type="button" aria-label="Jeda dan menu"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4.2" height="14" rx="1.4"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.4"/></svg></button>
+    <button id="muteBtn" class="hudBtn" type="button" aria-label="Suara hidup atau mati"></button>
   </div>
 </div>
 
@@ -218,13 +277,13 @@ body.calibrating #camHint{font-size:15px;padding:6px}
 <div id="fps" hidden></div>
 <div id="toast" role="status"></div>
 
-<div id="overlay" class="scene">
+<div id="overlay" class="scene" hidden>
   <section class="panel" id="p-menu">
-    <h1>Tangkap Bentuk</h1>
+    <h1 class="logo sm" aria-label="Tangkap Bentuk"><span class="l1">Tangkap</span><span class="l2">Bentuk</span></h1>
     <div class="actions menu-actions">
-      <button class="btn big" id="btnPlay" type="button" disabled><span class="ic">🎮</span><span class="tx">Bermain</span></button>
-      <button class="btn big alt" id="btnSettings" type="button"><span class="ic">⚙️</span><span class="tx">Pengaturan</span></button>
-      <button class="btn big alt" id="btnExit" type="button"><span class="ic">🚪</span><span class="tx">Exit</span></button>
+      <button class="btn big" id="btnPlay" type="button" disabled><span class="tx">Bermain</span></button>
+      <button class="btn big alt" id="btnSettings" type="button"><span class="tx">Pengaturan</span></button>
+      <button class="btn big alt" id="btnExit" type="button"><span class="tx">Exit</span></button>
     </div>
     <p class="status" id="loadStatus">Memuat gambar…</p>
   </section>
@@ -232,8 +291,8 @@ body.calibrating #camHint{font-size:15px;padding:6px}
   <section class="panel" id="p-mode" hidden>
     <h2>Pilih mode bermain</h2>
     <div class="actions menu-actions">
-      <button class="btn big" id="btnModeCam" type="button"><span class="ic">📷</span><span class="tx">Mode Kamera<small>Geser badanmu untuk pindah jalur</small></span></button>
-      <button class="btn big alt" id="btnModeKey" type="button"><span class="ic">👆</span><span class="tx">Mode Tombol<small>Tekan tombol 1 (kiri) dan 2 (kanan)</small></span></button>
+      <button class="btn big" id="btnModeCam" type="button"><span class="tx">Mode Kamera<small>Geser badanmu untuk pindah jalur</small></span></button>
+      <button class="btn big alt" id="btnModeKey" type="button"><span class="tx">Mode Tombol<small>Tekan tombol 1 (kiri) dan 2 (kanan)</small></span></button>
     </div>
     <p class="status" id="modeStatus"></p>
     <div class="actions" style="margin:0 auto 14px"><button class="btn alt back" id="btnModeBack" type="button">Kembali</button></div>
@@ -248,6 +307,7 @@ body.calibrating #camHint{font-size:15px;padding:6px}
   <section class="panel" id="p-calib" hidden>
     <p id="calibMsg"></p>
     <div id="calibNum"></div>
+    <div class="actions" style="margin:16px auto 0"><button class="btn alt back" id="btnMenu3" type="button">Menu utama</button></div>
   </section>
 
   <section class="panel" id="p-pause" hidden>
@@ -255,7 +315,7 @@ body.calibrating #camHint{font-size:15px;padding:6px}
     <div class="actions">
       <button class="btn" id="btnResume" type="button">Lanjut</button>
       <button class="btn alt" id="btnSettings2" type="button">Pengaturan</button>
-      <button class="btn alt" id="btnMenu1" type="button">Ke menu</button>
+      <button class="btn alt" id="btnMenu1" type="button">Menu utama</button>
     </div>
   </section>
 
@@ -289,9 +349,18 @@ body.calibrating #camHint{font-size:15px;padding:6px}
     <p class="score-line">Rekor <b id="bestScore">0</b></p>
     <div class="actions" style="margin-top:14px">
       <button class="btn" id="btnAgain" type="button">Main lagi</button>
-      <button class="btn alt" id="btnMenu2" type="button">Ke menu</button>
+      <button class="btn alt" id="btnMenu2" type="button">Menu utama</button>
     </div>
   </section>
+</div>
+
+<div id="loading" role="status" aria-live="polite">
+  <h1 class="logo" aria-label="Tangkap Bentuk"><span class="l1">Tangkap</span><span class="l2">Bentuk</span></h1>
+  <div class="ld-bottom">
+    <p id="ldText">Memuat 0%</p>
+    <div class="ld-bar" id="ldBar"><i id="ldFill"></i></div>
+    <button class="btn" id="ldGo" type="button" hidden>Ketuk untuk mulai</button>
+  </div>
 </div>
 
 <script>
@@ -349,6 +418,21 @@ try { best = parseInt(localStorage.getItem('tangkapBentuk.best') || '0', 10) || 
 /* ---------------------------------------------------------------------
    Memuat gambar: assets/<key>/<key>1.png, <key>2.png ... sampai tidak ada
    --------------------------------------------------------------------- */
+/* Kemajuan loading: gambar bentuk, latar menu, musik, huruf */
+const PART_W = { img: 0.5, bg: 0.15, aud: 0.28, font: 0.07 };
+const part = { img: 0, bg: 0, aud: 0, font: 0 };
+let shownPct = 0;
+function setPart(k, v) {
+  part[k] = Math.max(part[k], Math.min(1, v));
+  let t = 0; for (const key in PART_W) t += PART_W[key] * part[key];
+  const pct = Math.round(t * 100);
+  if (pct > shownPct) {
+    shownPct = pct;
+    const f = document.getElementById('ldFill'), tx = document.getElementById('ldText');
+    if (f) f.style.width = pct + '%';
+    if (tx && !tx.dataset.done) tx.textContent = 'Memuat ' + pct + '%';
+  }
+}
 function loadImg(src) {
   return new Promise(res => {
     const im = new Image();
@@ -384,8 +468,9 @@ function visibleBox(im) {
 
 async function loadAssets() {
   const missing = [];
-  let total = 0;
+  let total = 0, si = 0;
   for (const s of SHAPES) {
+    setPart('img', si / SHAPES.length); si++;
     s.imgs = [];
     for (let n = 1; n <= MAX_VARIANTS; n++) {
       let im = null;
@@ -399,6 +484,7 @@ async function loadAssets() {
     }
     if (!s.imgs.length) missing.push(`${ASSET_DIR}/${s.key}/${s.key}1.png`);
   }
+  setPart('img', 1);
   shapes = SHAPES.filter(s => s.imgs.length);
   const st = $('loadStatus');
   if (shapes.length < 2) {
@@ -1192,9 +1278,13 @@ function bindPad(id, dir) {
 bindPad('padL', -1);
 bindPad('padR', 1);
 
+const ICON_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+const ICON_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 9.5l5 5M22 9.5l-5 5"/></svg>';
+function setMuteIcon() { $('muteBtn').innerHTML = muted ? ICON_OFF : ICON_ON; }
+setMuteIcon();
 function toggleMute() {
   muted = !muted;
-  $('muteBtn').textContent = muted ? '🔇' : '🔊';
+  setMuteIcon();
   if (muted) stopSpeech();
   applyVolumes();
 }
@@ -1256,6 +1346,8 @@ $('btnBack').addEventListener('click', () => { setState('menu'); showPanel('menu
 $('btnResume').addEventListener('click', resumeGame);
 $('btnMenu1').addEventListener('click', goMenu);
 $('btnMenu2').addEventListener('click', goMenu);
+$('btnMenu3').addEventListener('click', goMenu);
+$('pauseBtn').addEventListener('click', pauseGame);
 $('btnAgain').addEventListener('click', () => {
   initAudio(); resetGame(); beginFlow(false, false);   // kamera tetap aktif, latar belakang dipakai lagi
 });
@@ -1267,7 +1359,66 @@ resize();
 if ('speechSynthesis' in window) { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => {}; }
 requestAnimationFrame(frame);
 applyVolumes();
-loadAssets().then(() => { state = 'menu'; showPanel('menu'); syncMusic(); });
+
+/* ---------------------------------------------------------------------
+   Persiapan: gambar bentuk, latar menu, musik, huruf -> baru "Ketuk untuk mulai"
+   --------------------------------------------------------------------- */
+const MENU_BG = 'Whimsical_Shape_Catcher_Meadow.png';
+const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let ready = false;
+
+function audioFrac(t) {
+  const el = t.el;
+  if (el.readyState >= 4) return 1;
+  try { if (el.duration && el.buffered.length) return Math.min(1, el.buffered.end(el.buffered.length - 1) / el.duration); } catch (e) {}
+  return 0;
+}
+function waitAudio(t) {
+  return new Promise(res => {
+    const el = t.el;
+    if (isIOS || el.readyState >= 4) return res();      // iOS baru memuat musik setelah disentuh
+    const fin = () => res();
+    el.addEventListener('canplaythrough', fin, { once: true });
+    el.addEventListener('error', fin, { once: true });
+    setTimeout(fin, 8000);                                // jangan menunggu selamanya
+  });
+}
+function loadFont() {
+  if (!document.fonts || !document.fonts.load) return Promise.resolve();
+  return Promise.race([
+    Promise.all([document.fonts.load('700 48px Fredoka'), document.fonts.load('600 20px Fredoka')]).catch(() => {}),
+    new Promise(r => setTimeout(r, 3500)),
+  ]);
+}
+async function boot() {
+  const t0 = performance.now();
+  const timer = setInterval(() => setPart('aud', (audioFrac(music.menu) + audioFrac(music.game)) / 2), 200);
+  await Promise.all([
+    loadAssets().catch(() => {}),
+    loadImg(MENU_BG).then(() => setPart('bg', 1)),
+    Promise.all([waitAudio(music.menu), waitAudio(music.game)]).then(() => setPart('aud', 1)),
+    loadFont().then(() => setPart('font', 1)),
+  ]);
+  clearInterval(timer);
+  const wait = 1400 - (performance.now() - t0);            // tampilkan layar loading minimal sebentar
+  if (wait > 0) await new Promise(r => setTimeout(r, wait));
+  for (const k in PART_W) setPart(k, 1);
+  const tx = $('ldText'); tx.dataset.done = '1';
+  tx.textContent = shapes.length < 2 ? ($('loadStatus').textContent || 'Gambar belum lengkap') : 'Siap dimainkan';
+  $('ldBar').hidden = true; $('ldGo').hidden = false; $('ldGo').focus({ preventScroll: true });
+  ready = true;
+}
+function leaveLoading() {
+  if (!ready) return;
+  ready = false;
+  unlockAudio();                                           // ketukan pertama ini membuka izin suara
+  state = 'menu'; showPanel('menu'); syncMusic();
+  const l = $('loading'); l.classList.add('out');
+  setTimeout(() => l.remove(), 700);
+}
+$('loading').addEventListener('click', leaveLoading);
+addEventListener('keydown', e => { if (ready && (e.code === 'Enter' || e.code === 'Space')) { e.preventDefault(); leaveLoading(); } });
+boot();
 </script>
 </body>
 </html>
