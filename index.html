@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tangkap Bentuk</title>
+<link rel="preload" as="image" href="Whimsical_Shape_Catcher_Meadow.png">
 <style>
 :root{
   --ink:#3b2412;
@@ -109,12 +110,60 @@ body.calibrating #camHint{font-size:15px;padding:6px}
 .btn:disabled{opacity:.45;cursor:default}
 .status{margin:0 0 10px;font-size:15px;font-weight:700;min-height:1.3em}
 .status:empty{display:none}
-.menu-actions{flex-direction:column;align-items:stretch;margin:22px auto 16px;max-width:300px}
-.menu-actions .btn{font-size:24px;padding:16px 22px}
-.tips{margin:0;padding:0;list-style:none;font-size:15px;line-height:1.55;text-align:left;
-  background:#f0e0b8;border-radius:16px;padding:12px 16px}
-.tips li+li{margin-top:2px}
-.privacy{margin:12px 0 0;font-size:13px;opacity:.75}
+/* ---------- Menu utama ---------- */
+#overlay.scene{
+  background-color:#8fc8f2;
+  background-image:linear-gradient(to top,rgba(43,26,10,.4),rgba(43,26,10,0) 50%),url("Whimsical_Shape_Catcher_Meadow.png");
+  background-size:cover;background-position:center 30%;background-repeat:no-repeat;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+#overlay.dock{align-items:flex-end;padding-bottom:calc(env(safe-area-inset-bottom,0px) + clamp(18px,6vh,64px))}
+#p-menu{background:none;border:0;box-shadow:none;padding:0;width:min(96vw,1200px)}
+#p-menu .title{
+  margin:0 0 clamp(14px,3vh,30px);font-size:clamp(40px,min(10.5vw,15vh),128px);line-height:.95;letter-spacing:.01em;
+  color:#fff6d6;-webkit-text-stroke:.12em #5b3418;paint-order:stroke fill;
+  text-shadow:0 .07em 0 #3b2412,0 .14em .2em rgba(30,15,5,.4);
+  transform:rotate(-2deg);animation:titleIn .8s cubic-bezier(.3,1.4,.5,1) both;
+}
+@keyframes titleIn{from{opacity:0;transform:translateY(-26px) rotate(-2deg) scale(.9)}to{opacity:1;transform:rotate(-2deg)}}
+@media (max-aspect-ratio:4/5){
+  #p-menu .title{font-size:clamp(48px,min(19vw,12vh),120px)}
+  #p-menu .title span{display:block}
+}
+.stack{display:grid;justify-items:center}
+.view{grid-area:1/1;display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:14px 18px}
+.view.off{visibility:hidden;pointer-events:none}
+#menuMode{flex-direction:column;align-items:center}
+.mode-row{display:flex;justify-content:center;gap:14px 18px}
+.btn.big{
+  font-size:clamp(22px,3vw,30px);padding:.6em 1em;min-width:min(42vw,220px);border-radius:20px;
+  box-shadow:0 6px 0 var(--coral-deep),inset 0 3px 0 rgba(255,255,255,.3);
+}
+.btn.alt.big{box-shadow:0 6px 0 #2f1d0e,inset 0 3px 0 rgba(255,255,255,.2)}
+.btn.big:active{box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.mode{
+  font:inherit;font-weight:900;font-size:clamp(18px,2.4vw,24px);line-height:1.15;color:var(--ink);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  width:clamp(150px,40vw,240px);padding:18px 14px 16px;
+  background:#fbf0d4;border:4px solid #8a5a3a;border-radius:24px;box-shadow:0 7px 0 rgba(59,36,18,.55);
+}
+.mode .ico{
+  width:64px;height:64px;border-radius:50%;background:var(--coral);color:#fff;display:grid;place-items:center;
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.3),0 3px 0 var(--coral-deep);
+}
+.mode:hover{transform:translateY(-3px)}
+.mode:active{transform:translateY(4px);box-shadow:0 3px 0 rgba(59,36,18,.55)}
+.mode:disabled{opacity:.5;cursor:default;transform:none}
+.mode:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
+.scene .status:not(:empty){
+  display:inline-block;margin:16px 0 0;padding:5px 16px;
+  background:rgba(251,240,212,.94);border:2px solid #8a5a3a;border-radius:999px;
+}
+@media (max-height:480px){
+  .mode{flex-direction:row;width:auto;padding:10px 16px;font-size:18px}
+  .mode .ico{width:44px;height:44px}
+  .mode .ico svg{width:26px;height:26px}
+}
 #p-calib{background:rgba(251,240,212,.97)}
 #calibMsg{margin:0;font-size:clamp(18px,3.4vw,24px);font-weight:800;line-height:1.3}
 #calibNum{font-size:clamp(56px,12vw,92px);font-weight:900;color:var(--coral);line-height:1;min-height:1em;margin-top:6px}
@@ -180,21 +229,30 @@ body.calibrating #camHint{font-size:15px;padding:6px}
 <div id="fps" hidden></div>
 <div id="toast" role="status"></div>
 
-<div id="overlay">
+<div id="overlay" class="scene dock">
   <section class="panel" id="p-menu">
-    <h1>Tangkap Bentuk</h1>
-    <div class="actions menu-actions">
-      <button class="btn" id="btnStart" type="button" disabled>Start</button>
-      <button class="btn alt" id="btnExit" type="button">Exit</button>
+    <h1 class="title"><span>Tangkap</span> <span>Bentuk</span></h1>
+    <div class="stack">
+      <div class="view" id="menuMain">
+        <button class="btn big" id="btnStart" type="button" disabled>Bermain</button>
+        <button class="btn alt big" id="btnExit" type="button">Keluar</button>
+      </div>
+      <div class="view off" id="menuMode" inert>
+        <div class="mode-row">
+          <button class="mode" id="btnCam" type="button">
+            <span class="ico"><svg viewBox="0 0 48 48" width="38" height="38" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M6 17a3 3 0 0 1 3-3h6l3-4h12l3 4h6a3 3 0 0 1 3 3v19a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/><circle cx="24" cy="26" r="8"/></svg></span>
+            Mode Kamera
+          </button>
+          <button class="mode" id="btnKeys" type="button">
+            <span class="ico"><svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3.5"><circle cx="13" cy="24" r="10"/><circle cx="35" cy="24" r="10"/></g><g fill="currentColor" font-family="inherit" font-size="15" font-weight="900" text-anchor="middle"><text x="13" y="29.5">1</text><text x="35" y="29.5">2</text></g></svg></span>
+            Mode Tekan Tombol
+          </button>
+        </div>
+        <button class="btn alt" id="btnModeBack" type="button">Kembali</button>
+      </div>
     </div>
     <p class="status" id="loadStatus">Memuat gambar…</p>
-    <ul class="tips">
-      <li>Kamera dipakai untuk membaca gerak badanmu.</li>
-      <li>Saat diminta, keluar dari bingkai kamera selama 5 detik.</li>
-      <li>Lalu masuk ke bingkai dan berdiri di tengah selama 5 detik.</li>
-      <li>Geser badan sekali ke kiri atau kanan untuk pindah jalur.</li>
-    </ul>
-    <p class="privacy">Video kamera hanya diproses di perangkatmu dan tidak dikirim ke mana pun.</p>
+    <p class="status" id="modeStatus"></p>
   </section>
 
   <section class="panel" id="p-calib" hidden>
@@ -274,6 +332,7 @@ let items = [], fx = [], particles = [], popups = [];
 let score = 0, lives = START_LIVES, level = 1, correctTotal = 0, correctInTarget = 0, streak = 0;
 let target = null, targetClock = 0, spawnTimer = 1, shake = 0, flash = 0, best = 0;
 let muted = false, previewOn = true;
+let mode = 'camera';             // 'camera' = Mode Kamera, 'button' = Mode Tekan Tombol
 let lastKey = 0;
 const clouds = Array.from({ length: 5 }, (_, i) => ({ x: Math.random(), y: 0.06 + Math.random() * 0.3, s: rand(0.7, 1.3), v: rand(0.004, 0.012) }));
 
@@ -533,19 +592,27 @@ function finalizeBackground() {
    Alur: menu -> (kalibrasi kamera) -> hitung mundur -> main -> selesai
    --------------------------------------------------------------------- */
 const overlay = $('overlay');
-const calib = { phase: null, t: 0, resume: false };
+const calib = { phase: null, t: 0, resume: false, note: '' };
 
 function showPanel(id) {
   overlay.hidden = !id;
   document.querySelectorAll('.panel').forEach(p => { p.hidden = p.id !== 'p-' + id; });
   overlay.classList.toggle('top', id === 'calib');
+  overlay.classList.toggle('scene', id === 'menu' || id === 'exit');
+  overlay.classList.toggle('dock', id === 'menu');
+  if (id === 'menu') { menuView('main'); $('modeStatus').textContent = ''; }
   if (id) { const b = $('p-' + id).querySelector('button'); if (b) b.focus({ preventScroll: true }); }
+}
+function menuView(v) {
+  const m = v === 'mode';
+  $('menuMain').classList.toggle('off', m); $('menuMain').inert = m;
+  $('menuMode').classList.toggle('off', !m); $('menuMode').inert = !m;
 }
 function setState(s) {
   state = s;
   document.body.classList.toggle('calibrating', s === 'calibrate' && camera.active);
   $('hud').hidden = !(s === 'playing' || s === 'paused' || s === 'calibrate');
-  $('padL').hidden = $('padR').hidden = s !== 'playing';
+  $('padL').hidden = $('padR').hidden = !(s === 'playing' && mode === 'button');
   refreshPreview();
 }
 
@@ -556,8 +623,8 @@ function resetGame() {
   updateHud();
 }
 
-function beginFlow(full, resume) {
-  calib.resume = resume; calib.t = 0;
+function beginFlow(full, resume, note = '') {
+  calib.resume = resume; calib.t = 0; calib.note = note;
   const doCalib = full && camera.active;
   calib.phase = doCalib ? 'empty' : 'enter';
   if (doCalib) { camera.calibrated = false; camera.acc.fill(0); camera.accN = 0; camera.seen = false; }
@@ -581,7 +648,7 @@ function updateCalib(dt) {
       if (calib.t >= 5) { startPlaying(); return; }
       break;
     case 'enter':
-      msg = 'Bersiap!';
+      msg = (calib.note ? calib.note + ' ' : '') + 'Bersiap!';
       num = Math.max(1, Math.ceil(3 - calib.t));
       if (calib.t >= 3) { startPlaying(); return; }
       break;
@@ -994,14 +1061,15 @@ addEventListener('keydown', e => {
   switch (e.code) {
     case 'Digit1': case 'Numpad1':
       e.preventDefault();
-      if (!e.repeat && (state === 'playing' || state === 'calibrate')) { setLane(basket.lane - 1); lastKey = performance.now(); }
+      if (!e.repeat && mode === 'button' && (state === 'playing' || state === 'calibrate')) { setLane(basket.lane - 1); lastKey = performance.now(); }
       break;
     case 'Digit2': case 'Numpad2':
       e.preventDefault();
-      if (!e.repeat && (state === 'playing' || state === 'calibrate')) { setLane(basket.lane + 1); lastKey = performance.now(); }
+      if (!e.repeat && mode === 'button' && (state === 'playing' || state === 'calibrate')) { setLane(basket.lane + 1); lastKey = performance.now(); }
       break;
     case 'KeyP': case 'Escape':
       if (state === 'playing') pauseGame(); else if (state === 'paused') resumeGame();
+      else if (state === 'menu' && e.code === 'Escape' && !$('menuMode').classList.contains('off')) menuView('main');
       break;
     case 'KeyM': toggleMute(); break;
     case 'KeyF': $('fps').hidden = !$('fps').hidden; break;
@@ -1039,23 +1107,31 @@ function toggleMute() {
 $('muteBtn').addEventListener('click', toggleMute);
 $('target').addEventListener('click', () => { if (state === 'playing' && target) say('Tangkap bentuk ' + target.label); });
 
-$('btnStart').addEventListener('click', async () => {
+$('btnStart').addEventListener('click', () => {
+  initAudio(); menuView('mode'); $('btnCam').focus({ preventScroll: true });
+});
+$('btnModeBack').addEventListener('click', () => {
+  menuView('main'); $('btnStart').focus({ preventScroll: true });
+});
+$('btnKeys').addEventListener('click', () => {
+  initAudio(); mode = 'button'; stopCamera();
+  resetGame(); beginFlow(false, false);
+});
+$('btnCam').addEventListener('click', async () => {
   initAudio();
-  const st = $('loadStatus');
-  $('btnStart').disabled = true;
+  const st = $('modeStatus'), bc = $('btnCam'), bk = $('btnKeys');
+  bc.disabled = bk.disabled = true;
   st.textContent = 'Meminta izin kamera…';
   try {
     await startCamera();
-    st.textContent = '';
+    mode = 'camera'; st.textContent = '';
     resetGame(); beginFlow(true, false);
   } catch (err) {
     stopCamera();
-    const msg = cameraErrorText(err);
-    st.textContent = msg + ' Main dengan tombol 1 dan 2.';
-    resetGame(); beginFlow(false, false);
-    toast(msg);
+    mode = 'button'; st.textContent = '';
+    resetGame(); beginFlow(false, false, cameraErrorText(err) + ' Pindah ke Mode Tekan Tombol.');
   } finally {
-    $('btnStart').disabled = false;
+    bc.disabled = bk.disabled = false;
   }
 });
 $('btnExit').addEventListener('click', () => {
