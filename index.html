@@ -111,6 +111,33 @@ body.calibrating #camHint{font-size:15px;padding:6px}
 .status:empty{display:none}
 .menu-actions{flex-direction:column;align-items:stretch;margin:22px auto 16px;max-width:300px}
 .menu-actions .btn{font-size:24px;padding:16px 22px}
+/* latar menu: gambar padang rumput, tanpa blur */
+#overlay.scene{
+  background:#7cc4ee url('Whimsical_Shape_Catcher_Meadow.png') center/cover no-repeat;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+#overlay.scene .panel{background:rgba(251,240,212,.92)}
+.panel{max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow-y:auto;touch-action:pan-y}
+#p-menu,#p-mode{width:min(94vw,640px)}
+#p-menu .menu-actions,#p-mode .menu-actions{max-width:none}
+#p-menu h1{white-space:nowrap}
+#p-menu h1{font-size:clamp(40px,9vw,68px);margin-bottom:4px;text-shadow:0 3px 0 rgba(255,255,255,.7)}
+/* tombol menu besar dengan ikon besar */
+.btn.big{display:flex;align-items:center;gap:16px;text-align:left;border-radius:24px;
+  font-size:clamp(26px,4.6vw,34px);padding:14px 24px 14px 16px}
+.btn.big .ic{flex:none;width:1.9em;height:1.9em;display:grid;place-items:center;font-size:1.25em;line-height:1;
+  background:rgba(255,255,255,.22);border-radius:50%}
+.btn.big .tx{flex:1}
+.btn.big small{display:block;font-size:.5em;font-weight:700;opacity:.9;margin-top:2px}
+.btn.big:disabled{opacity:.5}
+#p-mode h2{font-size:clamp(30px,6vw,44px)}
+#p-mode .btn.back{font-size:20px;padding:10px 22px}
+@media (max-height:560px){
+  .btn.big{font-size:24px;padding:8px 18px 8px 10px;gap:12px}
+  .menu-actions{margin:10px auto 8px;gap:8px}
+  #p-menu h1{font-size:40px}.panel{padding:16px 22px}
+  .tips{font-size:13px;padding:8px 12px}
+}
 /* semua menu: tombol tersusun atas-bawah */
 #p-pause .actions,#p-over .actions,#p-exit .actions,#p-settings .actions{
   flex-direction:column;align-items:stretch;max-width:300px;margin-left:auto;margin-right:auto;
@@ -191,20 +218,29 @@ body.calibrating #camHint{font-size:15px;padding:6px}
 <div id="fps" hidden></div>
 <div id="toast" role="status"></div>
 
-<div id="overlay">
+<div id="overlay" class="scene">
   <section class="panel" id="p-menu">
     <h1>Tangkap Bentuk</h1>
     <div class="actions menu-actions">
-      <button class="btn" id="btnStart" type="button" disabled>Start</button>
-      <button class="btn alt" id="btnSettings" type="button">Pengaturan</button>
-      <button class="btn alt" id="btnExit" type="button">Exit</button>
+      <button class="btn big" id="btnPlay" type="button" disabled><span class="ic">🎮</span><span class="tx">Bermain</span></button>
+      <button class="btn big alt" id="btnSettings" type="button"><span class="ic">⚙️</span><span class="tx">Pengaturan</span></button>
+      <button class="btn big alt" id="btnExit" type="button"><span class="ic">🚪</span><span class="tx">Exit</span></button>
     </div>
     <p class="status" id="loadStatus">Memuat gambar…</p>
+  </section>
+
+  <section class="panel" id="p-mode" hidden>
+    <h2>Pilih mode bermain</h2>
+    <div class="actions menu-actions">
+      <button class="btn big" id="btnModeCam" type="button"><span class="ic">📷</span><span class="tx">Mode Kamera<small>Geser badanmu untuk pindah jalur</small></span></button>
+      <button class="btn big alt" id="btnModeKey" type="button"><span class="ic">👆</span><span class="tx">Mode Tombol<small>Tekan tombol 1 (kiri) dan 2 (kanan)</small></span></button>
+    </div>
+    <p class="status" id="modeStatus"></p>
+    <div class="actions" style="margin:0 auto 14px"><button class="btn alt back" id="btnModeBack" type="button">Kembali</button></div>
     <ul class="tips">
-      <li>Kamera dipakai untuk membaca gerak badanmu.</li>
-      <li>Saat diminta, keluar dari bingkai kamera selama 5 detik.</li>
-      <li>Lalu masuk ke bingkai dan berdiri di tengah selama 5 detik.</li>
+      <li>Mode Kamera: saat diminta, keluar dari bingkai selama 5 detik, lalu masuk dan berdiri di tengah selama 5 detik.</li>
       <li>Geser badan sekali ke kiri atau kanan untuk pindah jalur.</li>
+      <li>Mode Tombol: di keyboard tekan 1 dan 2, di layar sentuh ketuk tombol 1 dan 2.</li>
     </ul>
     <p class="privacy">Video kamera hanya diproses di perangkatmu dan tidak dikirim ke mana pun.</p>
   </section>
@@ -280,6 +316,7 @@ const NEED_PER_TARGET = 4;       // tangkapan benar sebelum perintah berganti
 const CORRECT_PER_LEVEL = 6;     // tangkapan benar untuk naik level
 const TARGET_TIMEOUT = 22;       // detik, perintah berganti sendiri kalau lama tidak berubah
 const TARGET_BIAS = 0.45;        // peluang bentuk yang jatuh sama dengan perintah
+const FLIP_ITEMS = false;         // true = gambar dibalik kiri-kanan secara acak (hati-hati: angka/huruf pada gambar jadi terbalik)
 const LANES = 3;                 // jumlah jalur (kiri, tengah, kanan)
 
 // Pelacakan kamera (diproses pada gambar mini 64x48 supaya ringan)
@@ -369,7 +406,7 @@ async function loadAssets() {
     return;
   }
   st.textContent = missing.length ? `Belum ada: ${missing.join(', ')}` : '';
-  $('btnStart').disabled = false;
+  $('btnPlay').disabled = false;
 }
 
 /* ---------------------------------------------------------------------
@@ -633,6 +670,7 @@ function showPanel(id) {
   overlay.hidden = !id;
   document.querySelectorAll('.panel').forEach(p => { p.hidden = p.id !== 'p-' + id; });
   overlay.classList.toggle('top', id === 'calib');
+  overlay.classList.toggle('scene', id === 'menu' || id === 'mode' || id === 'exit' || (id === 'settings' && settingsFrom === 'menu'));
   if (id) { const b = $('p-' + id).querySelector('button'); if (b) b.focus({ preventScroll: true }); }
 }
 function setState(s) {
@@ -779,7 +817,7 @@ function spawn() {
   const speedMul = Math.min(2.1, 1 + 0.1 * (level - 1));
   items.push({
     shape: s, img: v.img, deco: v.deco, box: v.box, w, h,
-    flip: Math.random() < 0.5, lane, x: laneCx(lane), y: -h / 2,
+    flip: FLIP_ITEMS && Math.random() < 0.5, lane, x: laneCx(lane), y: -h / 2,
     vy: H * 0.27 * speedMul * rand(0.85, 1.2), pb: -9999
   });
 }
@@ -1183,10 +1221,15 @@ $('volSfx').addEventListener('change', () => sfx.good());   // contoh bunyi efek
 $('muteBtn').addEventListener('click', toggleMute);
 $('target').addEventListener('click', () => { if (state === 'playing' && target) say('Tangkap bentuk ' + target.label); });
 
-$('btnStart').addEventListener('click', async () => {
+$('btnPlay').addEventListener('click', () => {
+  initAudio(); $('modeStatus').textContent = ''; showPanel('mode');
+});
+$('btnModeBack').addEventListener('click', () => showPanel('menu'));
+// Mode kamera: minta izin kamera, lalu kalibrasi
+$('btnModeCam').addEventListener('click', async () => {
   initAudio();
-  const st = $('loadStatus');
-  $('btnStart').disabled = true;
+  const st = $('modeStatus'), b1 = $('btnModeCam'), b2 = $('btnModeKey');
+  b1.disabled = b2.disabled = true;
   st.textContent = 'Meminta izin kamera…';
   try {
     await startCamera();
@@ -1194,13 +1237,15 @@ $('btnStart').addEventListener('click', async () => {
     resetGame(); beginFlow(true, false);
   } catch (err) {
     stopCamera();
-    const msg = cameraErrorText(err);
-    st.textContent = msg + ' Main dengan tombol 1 dan 2.';
-    resetGame(); beginFlow(false, false);
-    toast(msg);
+    st.textContent = cameraErrorText(err) + ' Kamu bisa pilih Mode Tombol.';
   } finally {
-    $('btnStart').disabled = false;
+    b1.disabled = b2.disabled = false;
   }
+});
+// Mode tombol: tanpa kamera, pakai tombol 1 dan 2
+$('btnModeKey').addEventListener('click', () => {
+  initAudio(); stopCamera();
+  resetGame(); beginFlow(false, false);
 });
 $('btnExit').addEventListener('click', () => {
   stopSpeech(); stopCamera();
